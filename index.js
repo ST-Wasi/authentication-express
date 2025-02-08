@@ -23,12 +23,12 @@ app.post("/register", async (req, res) => {
   const name = body.name;
   const password = body.password;
   if (!useremail || !name || !password) {
-    res.status(400).send("Some Fileds Are Missing");
+    res.status(400).json({ message: "Some Fileds Are Missing" });
   }
   const isUserAlreadyExist = await User.findOne({ email: useremail });
 
   if (isUserAlreadyExist) {
-    res.status(400).send("User Already Have An Account");
+    res.status(400).json({ message: "User Already Have An Account" });
     return;
   } else {
     const salt = bcrypt.genSaltSync(10);
@@ -49,7 +49,7 @@ app.post("/register", async (req, res) => {
       password: hashedPassword,
       token: token,
     });
-    return res.status(201).send("User Created Succesfully");
+    return res.status(201).json({ message: "User Created Succesfully" });
   }
 });
 
@@ -65,19 +65,21 @@ app.post("/login", async (req, res) => {
     // if user exist, we have to do something
     const isPasswordMatched = bcrypt.compareSync(password, user.password);
     console.log("✌️isPasswordMatched --->", isPasswordMatched);
-    if(isPasswordMatched == true){
+    if (isPasswordMatched == true) {
       res.status(200).json({
         name: user.name,
         token: user.token,
-        email: user.email
-      })
+        email: user.email,
+      });
     } else {
-      res.status(400).send("Password Not Matched")
+      res.status(400).json({ message: "Password Not Matched" });
     }
-    console.log("✌️user --->", user);
-    res.status(200).send("Success");
+    // console.log("✌️user --->", user);
+    // res.status(200).send("Success");
   } else {
-    res.status(400).send("User is Not Registered. Please Register First");
+    res
+      .status(400)
+      .json({ message: "User is Not Registered. Please Register First" });
   }
 });
 
