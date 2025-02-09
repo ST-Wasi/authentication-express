@@ -96,7 +96,27 @@ app.get("/products", async (req, res) => {
   });
 });
 
-app.post("/add-product", async (req, res) => {});
+app.post("/add-product", async (req, res) => {
+  const body = req.body;
+  const name = body.name;
+  const description = body.description;
+  const image = body.image;
+  const price = body.price;
+  const brand = body.brand;
+  const stock = body.stock;
+  /// now we aassuming we hace every thing for product
+  await Product.create({
+    name: name,
+    description: description,
+    image: image,
+    stock: stock,
+    brand: brand,
+    price: price,
+  });
+  res.status(201).json({
+    message: "Product Created Succesfully",
+  });
+});
 
 app.listen(4242, () => {
   console.log("Server is Started on 4242");
