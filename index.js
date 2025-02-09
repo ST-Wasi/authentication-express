@@ -1,9 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { User } = require("./modals/User");
-const Product = require("./modals/Product");
+const { Product } = require("./modals/Product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { isUser } = require("./middlewares/isUser");
 
 const app = express();
 app.use(express.json());
@@ -48,6 +49,7 @@ app.post("/register", async (req, res) => {
       email: useremail,
       password: hashedPassword,
       token: token,
+      role: "user",
     });
     return res.status(201).json({ message: "User Created Succesfully" });
   }
@@ -70,6 +72,7 @@ app.post("/login", async (req, res) => {
         name: user.name,
         token: user.token,
         email: user.email,
+        role: user.role,
       });
     } else {
       res.status(400).json({ message: "Password Not Matched" });
@@ -81,6 +84,18 @@ app.post("/login", async (req, res) => {
       .status(400)
       .json({ message: "User is Not Registered. Please Register First" });
   }
+});
+
+app.get("/products", async (req, res) => {
+  console.log("Products");
+  const products = await Product.find();
+  res.status(200).json({
+    products: products,
+  });
+});
+
+app.post("/add-product", async (req, res) => {
+
 });
 
 app.listen(4242, () => {
