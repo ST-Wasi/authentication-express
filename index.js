@@ -5,9 +5,11 @@ const { Product } = require("./modals/Product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { isUser } = require("./middlewares/isUser");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 mongoose
   .connect("mongodb://localhost:27017/klecommerce")
   .then(() => {
@@ -94,9 +96,7 @@ app.get("/products", async (req, res) => {
   });
 });
 
-app.post("/add-product", async (req, res) => {
-
-});
+app.post("/add-product", async (req, res) => {});
 
 app.listen(4242, () => {
   console.log("Server is Started on 4242");
